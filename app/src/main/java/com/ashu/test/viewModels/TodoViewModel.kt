@@ -20,8 +20,7 @@ class TodoViewModel(
     private val todoRepository: TodoRepository = Graph.todoRepository
 ) : ViewModel() {
     val formattedDate = DateTimeFormatter.ofPattern("dd MMM yyyy")
-    val formattedTime = DateTimeFormatter.ofPattern("hh:mm")
-    val showDialog = mutableStateOf(false)
+    val formattedTime = DateTimeFormatter.ofPattern("hh:mm a")
     val from = mutableStateOf("")
     val usernames = listOf("All", "Personal", "Work")
     val itemPosition = mutableIntStateOf(0)
@@ -35,7 +34,7 @@ class TodoViewModel(
     val descriptionField = mutableStateOf("")
     val titleFieldError = mutableStateOf<String?>(null)
     val descriptionFieldError = mutableStateOf<String?>(null)
-    val createdDate = mutableStateOf("")
+    val createdDate = mutableStateOf("${LocalDate.now()}")
 
     val selectedDateField = mutableStateOf(LocalDate.now())
     val todoDateState = mutableStateOf<LocalDate>(LocalDate.now())

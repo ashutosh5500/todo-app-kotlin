@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import com.ashu.test.data.TodoModel
-import java.lang.Long.parseLong
 import java.util.concurrent.TimeUnit
 
 class NotificationHelper(
@@ -22,12 +21,11 @@ class NotificationHelper(
     companion object {
         const val CHANNEL_ID = "TaskReminderChannel"
         const val NOTIFICATION_PERMISSION_CODE = 1001
-        const val NOTIFICATION_ID = 1
+//        const val NOTIFICATION_ID = 1
     }
 
     fun createNotificationChannel() {
-        println("createNotificationChannel+++")
-        val name = "Task Reminder Channel"
+        val name: String = "Task Reminder Channel"
         val descriptionText = "Channel for task reminders"
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
@@ -38,6 +36,28 @@ class NotificationHelper(
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
+    }
+
+
+
+    fun showNotification(title: String, message: String) {
+        try {
+            val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your app’s icon
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH) // High importance
+                .setAutoCancel(true).build() // Automatically dismiss when tapped
+
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(
+                System.currentTimeMillis().toInt(),
+                notification,
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun requestNotificationPermission(activity: ComponentActivity) {
@@ -56,26 +76,6 @@ class NotificationHelper(
         }
     }
 
-    fun showNotification(title: String, message: String) {
-        try {
-            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your app’s icon
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH) // High importance
-                .setAutoCancel(true) // Automatically dismiss when tapped
-
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.notify(
-                NOTIFICATION_ID,
-                builder.build()
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     private fun scheduleTaskReminder(
         taskTitle: String,
         taskDescription: String,
@@ -83,7 +83,7 @@ class NotificationHelper(
     ) {
         val data = Data.Builder().putString("taskTitle", taskTitle)
             .putString("taskDescription", taskDescription).build()
-        val workRequest = OneTimeWorkRequestBuilder<ReminderWorker>().setInputData(inputData = data)
+        val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>().setInputData(inputData = data)
             .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS).build()
 
     }

@@ -21,6 +21,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.ashu.test.R
 import com.ashu.test.viewModels.TodoViewModel
 
@@ -249,12 +251,14 @@ class TodoAppBars {
         TextField(
             value = value,
             onValueChange = onValueChange,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorResource(R.color.customOrange),
-                unfocusedBorderColor = Color(0xFFCCCCCC),
-                focusedLabelColor = Color(0xFF6200EE),
-                cursorColor = colorResource(R.color.white),
-            ),
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = colorResource(R.color.customOrange),
+//                unfocusedBorderColor = Color(0xFFCCCCCC),
+//                focusedLabelColor = Color(0xFF6200EE),
+//                cursorColor = colorResource(R.color.white),
+//            ),
+
+
             textStyle = TextStyle(
                 color = Color.White,
                 fontSize = 16.sp,
@@ -277,6 +281,35 @@ class TodoAppBars {
                 .fillMaxWidth()
                 .padding(8.dp)
                 .shadow(1.dp, RoundedCornerShape(8.dp))
+        )
+    }
+
+    @Composable
+    fun BasicAppBar(navController: NavController) {
+        TopAppBar(
+            title = {
+
+                Text(
+                    text = "New Task",
+                    color = colorResource(R.color.customOrange),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Default
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White // Change back button color here
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color(0xff111111),
+                titleContentColor = Color.White
+            )
         )
     }
 }

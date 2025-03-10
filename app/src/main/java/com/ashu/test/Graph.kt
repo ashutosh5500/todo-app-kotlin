@@ -6,7 +6,7 @@ import com.ashu.test.data.TodoDB
 import com.ashu.test.data.TodoRepository
 
 object Graph {
-    lateinit var db: TodoDB
+    private lateinit var db: TodoDB
     val todoRepository by lazy {
         TodoRepository(
             todoDao = db.todoDao()

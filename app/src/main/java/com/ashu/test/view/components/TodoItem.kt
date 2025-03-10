@@ -60,7 +60,6 @@ fun TodoItem(
                     println("CLICKED___")
 
                     if (!todoViewModel.isMultiSelectFeatureActive.value) {
-                        todoViewModel.showDialog.value = true
                         todoViewModel.from.value = "update"
                         todoViewModel.titleField.value = todo.title
                         todoViewModel.descriptionField.value = todo.description
@@ -119,6 +118,7 @@ fun TodoItem(
                         color = Color.White
                     )
                 }
+                if(todo.createdDate.isNotEmpty())
                 Text(
                     text = "Created date: " + LocalDate.parse(todo.createdDate).format(todoViewModel.formattedDate) ,
                     fontSize = 12.sp,

@@ -1,7 +1,5 @@
 package com.ashu.test.view
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -19,23 +17,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.ashu.test.NotificationHelper
 import com.ashu.test.R
-import com.ashu.test.data.TodoModel
-import com.ashu.test.view.components.CreateTodoDialog
+import com.ashu.test.navigation.Screen
 import com.ashu.test.view.components.TitleComponent
 import com.ashu.test.view.components.TodoAppBars
 import com.ashu.test.view.components.TodoItem
 import com.ashu.test.viewModels.TodoViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import java.time.LocalDate
 import java.time.Period
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun MainScreen(
-    todoViewModel: TodoViewModel, notificationHelper: NotificationHelper
+    todoViewModel: TodoViewModel,
+    notificationHelper: NotificationHelper,
+    navController: NavHostController
 ) {
-    val todoAppBars = TodoAppBars()
 
+
+    val todoAppBars = TodoAppBars()
     Scaffold(topBar = {
         if (todoViewModel.isMultiSelectFeatureActive.value) {
             todoAppBars.DeleteAppBar(todoViewModel)
@@ -49,7 +52,7 @@ fun MainScreen(
         FloatingActionButton(
             onClick = {
                 todoViewModel.from.value = ""
-                todoViewModel.showDialog.value = true
+                navController.navigate(Screen.AddOrUpdate.route);
             }, containerColor = colorResource(R.color.customOrange)
         ) {
             Icon(
@@ -63,27 +66,6 @@ fun MainScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
-            if (todoViewModel.showDialog.value) {
-                CreateTodoDialog(onDismissRequest = {
-                    todoViewModel.showDialog.value = false
-                }, onSave = { title, description, todoDate, todoTime ->
-                    todoViewModel.addTodo(
-                        TodoModel(
-                            title = title,
-                            description = description,
-                            todoDate = todoDate.toString(),
-                            createdDate = LocalDate.now().toString(),
-                            isCompleted = false,
-                            todoTiming = todoTime.toString()
-                        )
-                    )
-
-                    todoViewModel.showDialog.value = false
-                    todoViewModel.clearValues();
-
-                }, todoViewModel, notificationHelper
-                )
-            }
 
             Spacer(modifier = Modifier.height(32.dp))
             val allTodos = todoViewModel.getAllTodos.collectAsState(initial = emptyList())
